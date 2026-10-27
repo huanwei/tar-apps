@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/huanwei/tar-apps/internal/farewell"
 	"github.com/huanwei/tar-apps/internal/greeting"
 )
 
@@ -18,6 +19,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", handleHealthz)
 	mux.HandleFunc("GET /hello", handleHello)
+	mux.HandleFunc("GET /farewell", handleFarewell)
 
 	log.Printf("listening on %s", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
@@ -33,6 +35,11 @@ func handleHealthz(w http.ResponseWriter, _ *http.Request) {
 func handleHello(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	writeJSON(w, map[string]string{"message": greeting.Hello(name)})
+}
+
+func handleFarewell(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	writeJSON(w, map[string]string{"message": farewell.Farewell(name)})
 }
 
 func writeJSON(w http.ResponseWriter, v any) {
