@@ -17,6 +17,8 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
+      - name: drill doc
+        run: test -s DRILL_RUNNER.md
       - name: gofmt
         run: test -z "$(gofmt -l .)"
       - name: vet
