@@ -21,6 +21,37 @@ func TestHandleHealthz(t *testing.T) {
 	}
 }
 
+func TestHandleFarewell(t *testing.T) {
+	tests := []struct {
+		name string
+		url  string
+		want string
+	}{
+		{name: "named", url: "/farewell?name=TAR", want: "Goodbye, TAR!"},
+		{name: "default", url: "/farewell", want: "Goodbye, world!"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.url, nil)
+			rec := httptest.NewRecorder()
+
+			handleFarewell(rec, req)
+
+			if rec.Code != http.StatusOK {
+				t.Fatalf("status = %d, want %d", rec.Code, http.StatusOK)
+			}
+			var got map[string]string
+			if err := json.NewDecoder(rec.Body).Decode(&got); err != nil {
+				t.Fatalf("decode response: %v", err)
+			}
+			if got["message"] != tt.want {
+				t.Errorf("message = %q, want %q", got["message"], tt.want)
+			}
+		})
+	}
+}
+
 func TestHandleHello(t *testing.T) {
 	tests := []struct {
 		name string
