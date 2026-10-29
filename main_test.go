@@ -21,6 +21,27 @@ func TestHandleHealthz(t *testing.T) {
 	}
 }
 
+func TestHandleReadyz(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/readyz", nil)
+	rec := httptest.NewRecorder()
+
+	handleReadyz(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusOK)
+	}
+	if got, want := rec.Header().Get("Content-Type"), "application/json"; got != want {
+		t.Errorf("Content-Type = %q, want %q", got, want)
+	}
+	var got map[string]string
+	if err := json.NewDecoder(rec.Body).Decode(&got); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if got["status"] != "ok" {
+		t.Errorf("status = %q, want %q", got["status"], "ok")
+	}
+}
+
 func TestHandleFarewell(t *testing.T) {
 	tests := []struct {
 		name string
