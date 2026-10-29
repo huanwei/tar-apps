@@ -8,3 +8,12 @@ func Hello(name string) string {
 	}
 	return "Hello, " + name + "!"
 }
+
+// HelloAll returns a greeting for each name, preserving order.
+func HelloAll(names []string) []string {
+	greetings := make([]string, len(names))
+	for i, name := range names {
+		greetings[i] = Hello(name)
+	}
+	return greetings
+}
