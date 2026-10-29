@@ -7,8 +7,10 @@ Minimal Go service used as the TAR production-pilot repository.
 | Method | Path | Description |
 | --- | --- | --- |
 | GET | `/healthz` | Liveness probe; returns `ok` |
+| GET | `/readyz` | Readiness probe; returns `{"status":"ok"}` |
 | GET | `/hello?name=...` | Returns `{"message":"Hello, <name>!"}`; defaults to `world` |
 | GET | `/farewell?name=...` | Returns `{"message":"Goodbye, <name>!"}`; defaults to `world` |
+| GET | `/version` | Returns `{"version":"0.1.0"}` |
 
 ## Local checks
 
