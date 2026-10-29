@@ -19,6 +19,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", handleHealthz)
+	mux.HandleFunc("GET /readyz", handleReadyz)
 	mux.HandleFunc("GET /hello", handleHello)
 	mux.HandleFunc("GET /farewell", handleFarewell)
 	mux.HandleFunc("GET /version", handleVersion)
@@ -32,6 +33,10 @@ func main() {
 func handleHealthz(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	_, _ = w.Write([]byte("ok\n"))
+}
+
+func handleReadyz(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, map[string]string{"status": "ok"})
 }
 
 func handleHello(w http.ResponseWriter, r *http.Request) {
