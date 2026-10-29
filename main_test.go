@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/huanwei/tar-apps/internal/version"
 )
 
 func TestHandleHealthz(t *testing.T) {
@@ -70,6 +72,27 @@ func TestHandleFarewell(t *testing.T) {
 				t.Errorf("message = %q, want %q", got["message"], tt.want)
 			}
 		})
+	}
+}
+
+func TestHandleVersion(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/version", nil)
+	rec := httptest.NewRecorder()
+
+	handleVersion(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusOK)
+	}
+	if got, want := rec.Header().Get("Content-Type"), "application/json"; got != want {
+		t.Errorf("Content-Type = %q, want %q", got, want)
+	}
+	var got map[string]string
+	if err := json.NewDecoder(rec.Body).Decode(&got); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if got["version"] != version.Version {
+		t.Errorf("version = %q, want %q", got["version"], version.Version)
 	}
 }
 
